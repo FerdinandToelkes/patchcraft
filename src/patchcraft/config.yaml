@@ -1,0 +1,81 @@
+input:
+  # Path where the data is located.
+  path: '/data' 
+  # prefix for all the names of the files resulting from command create_info_file (csv and log file)
+  info_filename: 'metadata' 
+  # Path to the file containing the overview of the metadata of all slides -> is the only file with prefix 'overview' 
+  overview_filename: 'overview.yaml'
+  
+
+output:
+  # Output path where processed data will be stored. 
+  path: './out'                                 
+  # Mode of the sampling process. (train or test)
+  mode: 'train'                                 
+  # Number of slides to be processed -> useful for testing sampling process.
+  number_of_slides: 1
+  # Number of patches per slide -> useful for testing sampling process.
+  number_of_patches_per_slide: 100              # only for trainings mode 
+  # Number of slide to start with -> for "parallelization" of the sampling process.
+  start_slide: 0                              
+  # Number of times the same patch should be sampled from the same slide
+  number_of_repeated_patches: 1                 # only for trainings mode   
+  # The threshold for the white ratio of the patch. If the white ratio is higher than the threshold, the patch will be discarded.
+  white_threshold: 0.25                          # only for trainings mode     
+  # Metadata of the slide (directly from sqlite file) that will be saved in the csv file. (The coordinates of the patch will be added automatically)
+  desired_metadata: ['filename', 'diagnosis', 'stain'] 
+  # log level
+  log_level: 'INFO'
+
+  
+
+  
+# Parameters needed for generating both training or test data
+general_transforms:
+  # Parameters for sampling
+  sampling:
+    # The stain to be sampled 
+    stain: 'HE'
+    # The patch size in micrometers to be sampled.
+    patch_size_um: 128
+    # Weather to use overlap=0.5 in sample_tiles
+    overlap_bool: False # only for sample_tiles command
+    # set how much two neighboring patches should overlap (in percentage)
+    overlap: 0.5 # only for sample_data command
+    # Pixel resolution per m of the WSI (default value if no resolution is available)
+    wsi_pixels_per_m: 4000000  
+    # random seed for making sampling more reproducible, default value is 0 -> use date + time as seed
+    random_seed: 0
+    # Target size for resizing. (Input tensor size for the net, tensors should be [N, target_size, target_size])
+    target_size: 224 # default from image net, only needed for sample_data command
+    # Whether to sample from highest level or not. (Sampling from highest level is disabled)
+    highest_zoom_level: False
+
+
+# Parameters needed only for generate_train_data (mostly for augmentation) 
+training_transforms:
+  sampling:
+    # patch size ranges, sampled sizes will be in (1+size_range, 1-size_range)* patch_size          
+    patch_size_range: 0.1 # only for sample_data command
+    # perturbation range for the patch coordinates in percentage of the tile size (note that the maximium perturbation is 0.5)
+    perturbation_range: 0.1 # only for sample_data command
+  
+  rotation: # only for sample_data command
+    # Enable rotation in the pipeline. (Rotation is enabled)
+    enabled: True  
+
+  flips:
+    # Enable flipping in the pipeline. (Flipping is enabled)
+    enabled: True  
+
+  color_jitter:
+    # random brightness changes in range [0,brightness_jitter]
+    brightness_jitter: 0.10
+    # random contrast changes in range [0,contrast_jitter]   
+    contrast_jitter: 0.10
+    # random saturation changes in range [0,saturation_jitter]
+    saturation_jitter: 0.10
+    # random hue changes in range [-hue_jitter,hue_jitter]
+    hue_jitter: 0.025
+
+    

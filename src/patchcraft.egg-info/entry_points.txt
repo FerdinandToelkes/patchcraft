@@ -1,0 +1,2 @@
+[console_scripts]
+patchcraft = patchcraft.__main__:main

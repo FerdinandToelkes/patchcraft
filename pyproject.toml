@@ -1,0 +1,45 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "wheel >= 0.38",
+]
+build-backend = "setuptools.build_meta"
+
+# Make sure that the .yaml file does not get overlooked
+[tool.setuptools.package-data]
+"*" = ["*.yaml"]
+
+# general information
+[project]
+name = "patchcraft"
+version = "1.0.0"
+dependencies = [
+  "torch~=2.0.1",
+  "torchvision~=0.15.1",
+  "numpy~=1.24.3",
+  "matplotlib~=3.7.1",
+  "scipy~=1.10.1",
+  "Pillow~=9.5.0",
+  "pandas~=2.0.1",
+  "opencv-python~=4.7.0.72",
+  "PyYAML~=6.0"
+]
+authors = [
+  { name="Ferdinand Toelkes", email="ferdinandtoelkes@icloud.com" },
+]
+description = "A package to sample and preprocess patches from slides preprocessed by Pamly"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+# such that we can use patchcraft instead of having to call python3 -m patchcraft
+[project.scripts]
+patchcraft = "patchcraft.__main__:main"
+
+[project.urls]
+"Homepage" = "https://github.com/FerdinandToelkes/patchcraft"
+"Bug Tracker" = "https://github.com/FerdinandToelkes/patchcraft/issues"
